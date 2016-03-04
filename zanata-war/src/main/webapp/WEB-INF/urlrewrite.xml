@@ -225,6 +225,11 @@
     <to last="true">/tm/create.seam$1</to>
   </rule>
 
+  <rule>
+    <from casesensitive="true">^/authorize/(\?.*)?$</from>
+    <to last="true">/authorize/home.seam$1</to>
+  </rule>
+
   <!-- ROOT / -->
   <rule>
     <from>^/$</from>
