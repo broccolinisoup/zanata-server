@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
 import javax.enterprise.context.RequestScoped;
@@ -42,6 +41,7 @@ import org.zanata.dao.ProjectIterationDAO;
 import org.zanata.events.DocumentMilestoneEvent;
 import org.zanata.events.DocumentStatisticUpdatedEvent;
 import org.zanata.events.DocumentUploadedEvent;
+import org.zanata.events.WebhookJmsEvent;
 import org.zanata.i18n.Messages;
 import org.zanata.lock.Lock;
 import org.zanata.model.HAccount;
@@ -122,6 +122,9 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Inject
     private Event<DocumentUploadedEvent> documentUploadedEvent;
+
+    @Inject
+    private Event<WebhookJmsEvent> webhookJmsEventEvent;
 
     @Override
     @Transactional
@@ -287,8 +290,9 @@ public class DocumentServiceImpl implements DocumentService {
 
     public void publishDocumentMilestoneEvent(WebHook webHook,
             DocumentMilestoneEvent milestoneEvent) {
-        WebHooksPublisher.publish(webHook.getUrl(), milestoneEvent,
-                Optional.fromNullable(webHook.getSecret()));
+        webhookJmsEventEvent.fire(
+            new WebhookJmsEvent(milestoneEvent, webHook.getUrl(),
+                webHook.getSecret()));
         log.info("firing webhook: {}:{}:{}:{}",
                 webHook.getUrl(), milestoneEvent.getProject(),
                 milestoneEvent.getVersion(), milestoneEvent.getDocId());

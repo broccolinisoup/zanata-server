@@ -66,6 +66,9 @@ public class JmsResourcesProducer {
     @Resource(lookup = "jms/queue/MailsQueue")
     private Queue mailQueue;
 
+    @Resource(lookup = "jms/queue/WebhookQueue")
+    private Queue webhookQueue;
+
     @Produces @RequestScoped @InVMJMS
     public QueueConnection createJMSConnection() throws JMSException {
         QueueConnection queueConnection =
@@ -103,9 +106,27 @@ public class JmsResourcesProducer {
         return session.createSender(mailQueue);
     }
 
-    public void closeQueueSender(@Disposes @EmailQueueSender QueueSender queueSender) {
+    @Produces
+    @WebhookQueueSender
+    public QueueSender createWebhookQueueSender(@InVMJMS
+        QueueSession session) throws JMSException {
+        return session.createSender(webhookQueue);
+    }
+
+    public void closeEmailQueueSender(
+        @Disposes @EmailQueueSender QueueSender queueSender) {
         try {
             log.debug("________ closing email queue sender");
+            queueSender.close();
+        } catch (JMSException e) {
+            throw Throwables.propagate(e);
+        }
+    }
+
+    public void closeWebhookQueueSender(
+        @Disposes @WebhookQueueSender QueueSender queueSender) {
+        try {
+            log.debug("________ closing webhook queue sender");
             queueSender.close();
         } catch (JMSException e) {
             throw Throwables.propagate(e);

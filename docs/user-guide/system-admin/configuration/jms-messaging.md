@@ -53,6 +53,10 @@ EAP 6:
             <entry name="jms/queue/MailsQueue"/>
             <durable>true</durable>
           </jms-queue>
+          <jms-queue name="WebhookQueue">
+            <entry name="jms/queue/WebhookQueue"/>
+            <durable>true</durable>
+          </jms-queue>
           <!-- omit other things -->
         </jms-destinations>
       </hornetq-server>
@@ -83,11 +87,12 @@ or (Wildfly 10, EAP 7):
       <server name="default">
         <!-- omit other things -->
           <jms-queue name="MailsQueue" entries="java:/jms/queue/MailsQueue"/>
+          <jms-queue name="MailsQueue" entries="java:/jms/queue/WebhookQueue"/>
         <!-- omit other things -->
       </server>
     </subsystem>
 ```
 
-The only Zanata-specific change here is the addition of the JMS queue "MailsQueue" - the mdb configuration is simply copied from `standalone-full.xml`.
+The only Zanata-specific change here is the addition of the JMS queue "MailsQueue" and "WebhookQueue" - the mdb configuration is simply copied from `standalone-full.xml`.
 
 Restart your server to ensure changes are applied.

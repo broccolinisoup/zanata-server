@@ -434,6 +434,7 @@
                 <in-vm-acceptor name="in-vm" server-id="0" />
                 <jms-queue name="ExpiryQueue" entries="java:/jms/queue/ExpiryQueue" />
                 <jms-queue name="DLQ" entries="java:/jms/queue/DLQ" />
+                <jms-queue name="WebhookQueue" entries="java:/jms/queue/WebhookQueue" />
                 <jms-queue name="MailsQueue" entries="java:/jms/queue/MailsQueue" />
                 <connection-factory name="InVmConnectionFactory"
                   entries="java:/ConnectionFactory" connectors="in-vm" />

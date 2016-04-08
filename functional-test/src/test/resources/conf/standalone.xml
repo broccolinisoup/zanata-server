@@ -341,6 +341,10 @@
         </jms-connection-factories>
 
         <jms-destinations>
+          <jms-queue name="WebhookQueue">
+            <entry name="jms/queue/WebhookQueue"/>
+            <durable>true</durable>
+          </jms-queue>
           <jms-queue name="MailsQueue">
             <entry name="jms/queue/MailsQueue"/>
             <durable>true</durable>

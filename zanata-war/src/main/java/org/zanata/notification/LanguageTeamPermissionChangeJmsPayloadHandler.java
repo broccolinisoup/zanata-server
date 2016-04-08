@@ -26,7 +26,7 @@ import javax.mail.internet.InternetAddress;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.zanata.ApplicationConfiguration;
+
 import org.zanata.email.Addresses;
 import org.zanata.email.EmailBuilder;
 import org.zanata.email.LanguageTeamPermissionChangeEmailStrategy;
@@ -56,8 +56,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class LanguageTeamPermissionChangeJmsMessagePayloadHandler implements
-        EmailQueueMessageReceiver.JmsMessagePayloadHandler {
+public class LanguageTeamPermissionChangeJmsPayloadHandler implements
+    QueueMessageReceiver.JmsPayloadHandler {
     @Inject
     private EmailBuilder emailBuilder;
 

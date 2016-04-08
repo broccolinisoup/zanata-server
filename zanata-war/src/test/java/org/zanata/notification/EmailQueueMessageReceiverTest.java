@@ -10,7 +10,6 @@ import javax.jms.TextMessage;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.zanata.events.LanguageTeamPermissionChangedEvent;
 
@@ -21,7 +20,7 @@ import static org.mockito.Mockito.*;
 public class EmailQueueMessageReceiverTest {
     private EmailQueueMessageReceiver receiver;
     @Mock
-    private LanguageTeamPermissionChangeJmsMessagePayloadHandler languageTeamHandler;
+    private LanguageTeamPermissionChangeJmsPayloadHandler languageTeamHandler;
 
     @Before
     public void setUp() throws Exception {

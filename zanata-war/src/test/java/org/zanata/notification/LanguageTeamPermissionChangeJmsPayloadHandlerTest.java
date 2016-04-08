@@ -15,15 +15,14 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.zanata.ApplicationConfiguration;
 import org.zanata.common.LocaleId;
 import org.zanata.email.EmailBuilder;
 import org.zanata.email.LanguageTeamPermissionChangeEmailStrategy;
 import org.zanata.events.LanguageTeamPermissionChangedEvent;
 import org.zanata.i18n.Messages;
 
-public class LanguageTeamPermissionChangeJmsMessagePayloadHandlerTest {
-    private LanguageTeamPermissionChangeJmsMessagePayloadHandler handler;
+public class LanguageTeamPermissionChangeJmsPayloadHandlerTest {
+    private LanguageTeamPermissionChangeJmsPayloadHandler handler;
     @Mock
     private EmailBuilder emailBuilder;
 
@@ -34,7 +33,7 @@ public class LanguageTeamPermissionChangeJmsMessagePayloadHandlerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         handler =
-                new LanguageTeamPermissionChangeJmsMessagePayloadHandler(
+                new LanguageTeamPermissionChangeJmsPayloadHandler(
                         emailBuilder, new Messages(Locale.ENGLISH), "http://localhost");
 
     }

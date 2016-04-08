@@ -1,6 +1,10 @@
 ## 3.9
+<h5>New Features</h5>
+* [ZNTA-938](https://zanata.atlassian.net/browse/ZNTA-938) - Webhook event for translation update by user.
 
 <h5>Infrastructure Changes</h5>
+* Recommended platform: JBoss EAP 6 (6.4.6.GA or later).
+* Alternative platform: WildFly version 10.x.
 * [ZNTA-530](https://zanata.atlassian.net/browse/ZNTA-530) - Replace Seam 2 with CDI
   * In WildFly or EAP `standalone.xml`, please make sure the Weld
     extension is present in the `extensions` section like this:
@@ -32,10 +36,6 @@
 * [ZNTA-905](https://zanata.atlassian.net/browse/ZNTA-905) - Remove 0% matching translation memory entry
 * [ZNTA-928](https://zanata.atlassian.net/browse/ZNTA-928) - Readonly project doesn't have "lock" icon in UI
 * [ZNTA-793](https://zanata.atlassian.net/browse/ZNTA-793) - Remove unused method in TranslationMemoryAction
-
-<h5>Infrastructure Changes</h5>
-* Recommended platform: JBoss EAP 6 (6.4.6.GA or later).
-* Alternative platform: WildFly version 10.x.
 
 -----------------------
 ## 3.8.4

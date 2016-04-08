@@ -1,5 +1,5 @@
 /*
- * Copyright 2014, Red Hat, Inc. and individual contributors as indicated by the
+ * Copyright 2016, Red Hat, Inc. and individual contributors as indicated by the
  * @author tags. See the copyright.txt file in the distribution for a full
  * listing of individual contributors.
  *
@@ -20,27 +20,20 @@
  */
 package org.zanata.notification;
 
-import java.util.Map;
-
-import javax.ejb.ActivationConfigProperty;
-import javax.ejb.MessageDriven;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.zanata.events.WebhookEventType;
+import org.zanata.events.WebhookJmsEvent;
 
+import javax.ejb.ActivationConfigProperty;
+import javax.ejb.MessageDriven;
 import javax.inject.Inject;
-import org.zanata.events.LanguageTeamPermissionChangedEvent;
+import java.util.Map;
 
 /**
- * JMS EmailsQueue consumer. It will base on
- * org.zanata.notification.NotificationManager.MessagePropertiesKey#objectType
- * value to find a message payload handler. The objectType value is normally the
- * canonical name of the event class.
- *
- * @author Patrick Huang <a
- *         href="mailto:pahuang@redhat.com">pahuang@redhat.com</a>
+ * @author Alex Eng<a href="mailto:aeng@redhat.com">aeng@redhat.com</a>
  */
 @MessageDriven(activationConfig = {
         @ActivationConfigProperty(
@@ -49,21 +42,22 @@ import org.zanata.events.LanguageTeamPermissionChangedEvent;
         ),
         @ActivationConfigProperty(
                 propertyName = "destination",
-                propertyValue = "jms/queue/MailsQueue"
+                propertyValue = "jms/queue/WebhookQueue"
         )
 })
 @Slf4j
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class EmailQueueMessageReceiver extends QueueMessageReceiver {
+public class WebhookQueueMessageReceiver extends QueueMessageReceiver {
+
     @Inject
-    private LanguageTeamPermissionChangeJmsPayloadHandler languageTeamHandler;
+    private WebhookJmsPayloadHandler webhookJmsPayloadHandler;
 
     @Override
     protected Map<String, JmsPayloadHandler> getHandlers() {
         if (handlers.isEmpty()) {
-            addHandler(LanguageTeamPermissionChangedEvent.class
-                .getCanonicalName(), languageTeamHandler);
+            addHandler(WebhookJmsEvent.class.getCanonicalName(),
+                webhookJmsPayloadHandler);
         }
         return handlers;
     }

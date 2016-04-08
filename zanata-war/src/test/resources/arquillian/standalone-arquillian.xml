@@ -356,6 +356,10 @@
             <entry name="jms/queue/MailsQueue"/>
             <durable>true</durable>
           </jms-queue>
+          <jms-queue name="WebhookQueue">
+            <entry name="jms/queue/WebhookQueue"/>
+            <durable>true</durable>
+          </jms-queue>
           <jms-queue name="ExpiryQueue">
             <entry name="jms/queue/ExpiryQueue"/>
             <durable>true</durable>

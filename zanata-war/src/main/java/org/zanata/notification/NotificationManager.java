@@ -32,6 +32,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.zanata.events.LanguageTeamPermissionChangedEvent;
 
 import com.google.common.base.Throwables;
+import org.zanata.events.WebhookJmsEvent;
+
+import java.io.Serializable;
 
 /**
  * Centralized place to handle all events that needs to send out notifications.
@@ -46,13 +49,25 @@ public class NotificationManager {
     public void onLanguageTeamPermissionChanged(
             final @Observes LanguageTeamPermissionChangedEvent event,
             final @InVMJMS QueueSession queueSession,
-            final @EmailQueueSender QueueSender mailQueueSender) {
+            final @EmailQueueSender QueueSender queueSender) {
+        queueEvent(event, queueSession, queueSender);
+    }
+
+    public void onWebhookJmsFire(
+        final @Observes WebhookJmsEvent event,
+        final @InVMJMS QueueSession queueSession,
+        final @WebhookQueueSender QueueSender queueSender) {
+        queueEvent(event, queueSession, queueSender);
+    }
+
+    private void queueEvent(Serializable event, QueueSession queueSession,
+        QueueSender queueSender) {
         try {
             ObjectMessage message =
-                    queueSession.createObjectMessage(event);
+                queueSession.createObjectMessage(event);
             message.setObjectProperty(MessagePropertiesKey.objectType.name(),
-                    event.getClass().getCanonicalName());
-            mailQueueSender.send(message);
+                event.getClass().getCanonicalName());
+            queueSender.send(message);
         } catch (JMSException e) {
             throw Throwables.propagate(e);
         }
