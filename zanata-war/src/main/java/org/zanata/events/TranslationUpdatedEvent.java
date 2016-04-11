@@ -1,5 +1,5 @@
 /*
- * Copyright 2014, Red Hat, Inc. and individual contributors as indicated by the
+ * Copyright 2016, Red Hat, Inc. and individual contributors as indicated by the
  * @author tags. See the copyright.txt file in the distribution for a full
  * listing of individual contributors.
  *
@@ -25,13 +25,14 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
+import org.zanata.common.ContentState;
 import org.zanata.common.LocaleId;
+import org.zanata.rest.dto.User;
 
 /**
  *
- * Event for when a document in a language reached a milestone in translations.
+ * Event for when a translation being updated in Zanata
  *
  * @author Alex Eng <a href="mailto:aeng@redhat.com">aeng@redhat.com</a>
  */
@@ -39,9 +40,15 @@ import org.zanata.common.LocaleId;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonPropertyOrder({"project", "version", "docId", "locale", "editorDocumentUrl", "milestone"})
+@JsonPropertyOrder({"user", "project", "version", "docId", "locale", "url", "previousState", "newState", "wordCount"})
 @EqualsAndHashCode
-public class DocumentMilestoneEvent extends WebhookEventType {
+public class TranslationUpdatedEvent extends WebhookEventType {
+    /**
+     * User information
+     * {@link org.zanata.rest.dto.User}
+     */
+    private User user;
+
     /**
      * Target project slug.
      * {@link org.zanata.model.HProject#slug}
@@ -62,20 +69,30 @@ public class DocumentMilestoneEvent extends WebhookEventType {
 
     /**
      * Target locale id.
-     * {@link org.zanata.common.LocaleId}
+     * {@link LocaleId}
      */
     private LocaleId locale;
 
     /**
-     * Message for milestone reached.
+     * Editor url in target translation.
+     * {@link org.zanata.util.UrlUtil#fullEditorTransUnitUrl}
      */
-    private String milestone;
+    private String translationUrl;
 
     /**
-     * Editor url in target document.
-     * {@link org.zanata.util.UrlUtil#fullEditorDocumentUrl}
+     * Content state of translation before update
      */
-    private String editorDocumentUrl;
+    private ContentState previousState;
+
+    /**
+     * Content state of translation after update
+     */
+    private ContentState newState;
+
+    /**
+     * Word count of the updated translation
+     */
+    private int wordCount;
 
     @Override
     public String getType() {

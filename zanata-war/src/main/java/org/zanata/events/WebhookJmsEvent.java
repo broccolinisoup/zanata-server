@@ -22,10 +22,12 @@
 package org.zanata.events;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * A wrapper for JMS event for all webhook
@@ -35,11 +37,7 @@ import java.io.Serializable;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class WebhookJmsEvent implements Serializable {
-
-    private WebhookEventType event;
-
-    private String url;
-
-    private String secret;
+    private List<WebhookJms> events;
 }

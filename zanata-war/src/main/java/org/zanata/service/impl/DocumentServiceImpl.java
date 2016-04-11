@@ -21,6 +21,8 @@
 package org.zanata.service.impl;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
@@ -41,6 +43,7 @@ import org.zanata.dao.ProjectIterationDAO;
 import org.zanata.events.DocumentMilestoneEvent;
 import org.zanata.events.DocumentStatisticUpdatedEvent;
 import org.zanata.events.DocumentUploadedEvent;
+import org.zanata.events.WebhookJms;
 import org.zanata.events.WebhookJmsEvent;
 import org.zanata.i18n.Messages;
 import org.zanata.lock.Lock;
@@ -64,6 +67,7 @@ import org.zanata.ui.model.statistic.WordStatistic;
 import org.zanata.util.StatisticsUtil;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import javax.enterprise.event.Event;
 import org.zanata.util.UrlUtil;
@@ -280,22 +284,21 @@ public class DocumentServiceImpl implements DocumentService {
                             new DocumentMilestoneEvent(project.getSlug(),
                                     version.getSlug(), document.getDocId(),
                                     event.getLocaleId(), message, editorUrl);
-                    for (WebHook webHook : project.getWebHooks()) {
-                        publishDocumentMilestoneEvent(webHook, milestoneEvent);
-                    }
+                    publishDocumentMilestoneEvent(project.getWebHooks(),
+                            milestoneEvent);
                 }
             }
         }
     }
 
-    public void publishDocumentMilestoneEvent(WebHook webHook,
-            DocumentMilestoneEvent milestoneEvent) {
-        webhookJmsEventEvent.fire(
-            new WebhookJmsEvent(milestoneEvent, webHook.getUrl(),
-                webHook.getSecret()));
-        log.info("firing webhook: {}:{}:{}:{}",
-                webHook.getUrl(), milestoneEvent.getProject(),
-                milestoneEvent.getVersion(), milestoneEvent.getDocId());
+    public void publishDocumentMilestoneEvent(List<WebHook> webHooks,
+            DocumentMilestoneEvent event) {
+        Map<String, String> urlSecretMap = Maps.newHashMap();
+        for (WebHook webHook : webHooks) {
+            urlSecretMap.put(webHook.getUrl(), webHook.getSecret());
+        }
+        webhookJmsEventEvent.fire(new WebhookJmsEvent(
+                Lists.newArrayList(new WebhookJms(event, urlSecretMap))));
     }
 
     /**

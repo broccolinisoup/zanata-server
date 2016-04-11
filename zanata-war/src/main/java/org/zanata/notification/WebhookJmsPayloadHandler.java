@@ -22,15 +22,16 @@
 package org.zanata.notification;
 
 import com.google.common.base.Optional;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.zanata.events.WebhookJms;
 import org.zanata.events.WebhookJmsEvent;
 import org.zanata.service.impl.WebHooksPublisher;
 
 import javax.inject.Named;
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * Handles all webhook event (WebhookJmsEvent) to fire out.
@@ -58,7 +59,14 @@ public class WebhookJmsPayloadHandler implements
         WebhookJmsEvent jmsEvent = WebhookJmsEvent.class.cast(data);
         log.debug("webhook jmsEvent:{}", jmsEvent);
 
-        WebHooksPublisher.publish(jmsEvent.getUrl(), jmsEvent.getEvent(),
-            Optional.fromNullable(jmsEvent.getSecret()));
+        for(WebhookJms jms: jmsEvent.getEvents()) {
+            for (Map.Entry<String, String> entry : jms.getUrlSecretMap()
+                .entrySet()) {
+                WebHooksPublisher.publish(entry.getKey(), jms.getEvent(),
+                    Optional.fromNullable(entry.getValue()));
+                log.info("firing webhook - url-{}, event-{}",
+                    entry.getKey(), jms.getEvent());
+            }
+        }
     }
 }
