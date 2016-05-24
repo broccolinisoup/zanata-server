@@ -1897,8 +1897,7 @@
     <dependency>
       <groupId>org.infinispan</groupId>
       <artifactId>infinispan-core</artifactId>
-      <!-- TODO Use a bom for EAP or wildfly (This is the EAP 6.3 version) -->
-      <version>5.2.4.Final</version>
+      <version>${infinispan.version}</version>
       <scope>provided</scope>
     </dependency>
 

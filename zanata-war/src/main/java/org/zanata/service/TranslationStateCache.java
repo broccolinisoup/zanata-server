@@ -21,11 +21,17 @@
  */
 package org.zanata.service;
 
+import org.infinispan.Cache;
+import org.infinispan.stats.Stats;
 import org.zanata.common.LocaleId;
 import org.zanata.events.TextFlowTargetStateEvent;
 import org.zanata.ui.model.statistic.WordStatistic;
 import org.zanata.webtrans.shared.model.DocumentStatus;
 import org.zanata.webtrans.shared.model.ValidationId;
+
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Defines a Cache Service for translation states.
@@ -90,4 +96,11 @@ public interface TranslationStateCache {
      * @param localeId
      */
     void clearDocumentStatistics(Long documentId, LocaleId localeId);
+
+    List<String> getCacheList(String[] cacheNames);
+    Stats getStats(String cacheName);
+    void clearCache(String cacheName);
+    void clearAllCaches(String[] cacheNames);
+
+
 }
